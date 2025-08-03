@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 import userPhotoMiddleware from '../middleware/userPhotoMiddleware.js'
 import userPhoto from '../controller/userPhoto.js'
 import getUserData from '../controller/getUserData.js'
+import logoutUser from '../controller/logoutUser.js'
 dotenv.config()
 
 const Router = new express.Router()
@@ -21,5 +22,7 @@ Router.post('/refresh-token',refreshToken)
 Router.get("/user-img",userPhotoMiddleware,userPhoto)
 
 Router.get('/get-user-data',userPhotoMiddleware,getUserData)
+
+Router.post('/logout',logoutUser)
 
 export default Router
