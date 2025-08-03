@@ -9,14 +9,14 @@ async function loginUser(req,res)
 {
     try
     {
-        const user = await User.findOne({email:req.body.email},"email password")
+        const user = await User.findOne({email:req.body.email},"email password name username")
         if(user && bcrypt.compareSync(req.body.password,user.password))
         {
             const token = jwt.sign({email:user.email},process.env.ACCESS_TOKEN,{ expiresIn : "15s"})
-            const refreshToken = jwt.sign({email:user.email},process.env.REFRESH_TOKEN)
+            const refreshToken = jwt.sign({email:user.email},process.env.REFRESH_TOKEN, {expiresIn:"1h"})
             const refresh = new JwtRefreshToken({refreshToken})
             await refresh.save()
-            res.status(200).json({token:token,refreshToken:refreshToken})
+            res.status(200).json({token:token,refreshToken:refreshToken,email:user.email,name:user.name,username:user.username})
         }
         else
         {
@@ -27,7 +27,6 @@ async function loginUser(req,res)
     }
     catch(ex)
     {
-        console.log(ex)
         if(ex?.status === 401)
         {
             res.status(401).json({

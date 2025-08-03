@@ -5,6 +5,9 @@ import loginUser from '../controller/loginUser.js'
 import refreshToken from '../controller/refreshToken.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import userPhotoMiddleware from '../middleware/userPhotoMiddleware.js'
+import userPhoto from '../controller/userPhoto.js'
+import getUserData from '../controller/getUserData.js'
 dotenv.config()
 
 const Router = new express.Router()
@@ -15,28 +18,8 @@ Router.post('/login',loginUser)
 
 Router.post('/refresh-token',refreshToken)
 
-Router.get('/admin',(req,res,next)=>{
-    const token = req.headers["authorization"].split(" ")[1]
-    if(token)
-    {
-        jwt.verify(token,process.env.ACCESS_TOKEN,(err,data)=>{
-            if(err)
-            {
-                res.sendStatus(403)
-            }
-            else
-            {
-                req.user = data
-            }
-        })
-    }
-    else
-    {
-        res.sendStatus(403)
-    }
-    next()
-},(req,res)=>{
-    res.json(req.user)
-})
+Router.get("/user-img",userPhotoMiddleware,userPhoto)
+
+Router.get('/get-user-data',userPhotoMiddleware,getUserData)
 
 export default Router

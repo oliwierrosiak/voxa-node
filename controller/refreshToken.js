@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 import { JwtRefreshToken } from "../db/dbConfig.js"
 import dotenv from 'dotenv'
+import clearRefreshTokens from "../helpers/clearRefreshToken.js"
 dotenv.config()
 
 async function refreshToken (req,res)
@@ -33,6 +34,7 @@ async function refreshToken (req,res)
     {
         res.sendStatus(403)
     }
+    clearRefreshTokens()
 }
 
 export default refreshToken

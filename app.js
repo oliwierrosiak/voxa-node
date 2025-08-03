@@ -1,3 +1,6 @@
+export const projectRoot = process.cwd();
+
+
 import './server/expressConfig.js'
 
 import './db/dbConfig.js'
