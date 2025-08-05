@@ -28,6 +28,14 @@ const UserSchema = new mongoose.Schema({
     },
     img:{
         type: String
+    },
+    invitations:{
+        type: Array,
+        default: [],
+    },
+    invited:{
+        type:Array,
+        default:[],
     }
 })
 

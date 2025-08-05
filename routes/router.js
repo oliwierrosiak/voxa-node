@@ -3,12 +3,14 @@ import registerUser from '../controller/registerUser.js'
 import uploadHandler from '../middleware/uploadUserImage.js'
 import loginUser from '../controller/loginUser.js'
 import refreshToken from '../controller/refreshToken.js'
-import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import userPhotoMiddleware from '../middleware/userPhotoMiddleware.js'
+import userAuthorizationMiddleware from '../middleware/userAuthorization.js'
 import userPhoto from '../controller/userPhoto.js'
 import getUserData from '../controller/getUserData.js'
 import logoutUser from '../controller/logoutUser.js'
+import getSuggestedUsers from '../controller/getSuggestedUsers.js'
+import getUserImg from '../controller/getUserImg.js'
+import invitation from '../controller/invitation.js'
 dotenv.config()
 
 const Router = new express.Router()
@@ -19,10 +21,16 @@ Router.post('/login',loginUser)
 
 Router.post('/refresh-token',refreshToken)
 
-Router.get("/user-img",userPhotoMiddleware,userPhoto)
+Router.get("/user-img",userAuthorizationMiddleware,userPhoto)
 
-Router.get('/get-user-data',userPhotoMiddleware,getUserData)
+Router.get('/get-user-data',userAuthorizationMiddleware,getUserData)
 
 Router.post('/logout',logoutUser)
+
+Router.get('/get-suggested-users',userAuthorizationMiddleware,getSuggestedUsers)
+
+Router.get('/get-user-img/:img',userAuthorizationMiddleware,getUserImg)
+
+Router.post('/invitation',userAuthorizationMiddleware,invitation)
 
 export default Router

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
 
-function userPhotoMiddleware(req,res,next)
+function userAuthorizationMiddleware(req,res,next)
 {
     const token = req.headers["authorization"].split(" ")[1]
     if(token)
@@ -25,4 +25,4 @@ function userPhotoMiddleware(req,res,next)
     next()
 }
 
-export default userPhotoMiddleware
+export default userAuthorizationMiddleware

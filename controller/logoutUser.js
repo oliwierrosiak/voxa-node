@@ -4,7 +4,7 @@ async function logoutUser(req,res)
 {
     try
     {
-        const response = await JwtRefreshToken.deleteOne({refreshToken:req.body.token})
+        await JwtRefreshToken.deleteOne({refreshToken:req.body.token})
         res.send(200)
     }
     catch(ex)
