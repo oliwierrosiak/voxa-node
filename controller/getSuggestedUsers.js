@@ -4,9 +4,12 @@ async function getSuggestedUsers(req,res)
 {
     try
     {
-        const users = await User.find({},"username img")
+        const users = await User.find({},"username img invitations")
         const me = await User.findOne({email:req.user.email},"_id")
-        const usersFiltered = users.filter(x=>x._id.toString() != me._id.toString())
+        const userWithoutMe = users.filter(x=>x._id.toString() != me._id.toString())
+        const usersFiltered = userWithoutMe.filter(x=>{
+            return !x.invitations.includes(me._id.toString())
+        })
         const sendUsers = []
         if(usersFiltered.length == 0)
         {
