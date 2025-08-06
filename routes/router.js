@@ -11,6 +11,7 @@ import logoutUser from '../controller/logoutUser.js'
 import getSuggestedUsers from '../controller/getSuggestedUsers.js'
 import getUserImg from '../controller/getUserImg.js'
 import invitation from '../controller/invitation.js'
+import getMyInvitations from '../controller/getMyInvitations.js'
 dotenv.config()
 
 const Router = new express.Router()
@@ -32,5 +33,7 @@ Router.get('/get-suggested-users',userAuthorizationMiddleware,getSuggestedUsers)
 Router.get('/get-user-img/:img',userAuthorizationMiddleware,getUserImg)
 
 Router.post('/invitation',userAuthorizationMiddleware,invitation)
+
+Router.get('/get-my-invitations',userAuthorizationMiddleware,getMyInvitations)  
 
 export default Router
