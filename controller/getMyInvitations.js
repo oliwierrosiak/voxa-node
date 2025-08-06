@@ -14,7 +14,6 @@ async function getMyInvitations(req,res)
                 users.push(foundUser)
 
             }
-
             res.status(200).json(users)
         }
         else
