@@ -1,10 +1,11 @@
 import { User } from "../db/dbConfig.js"
+import { io, sockets } from "../server/expressConfig.js"
 
 async function getSuggestedUsers(req,res)
 {
     try
     {
-        const users = await User.find({},"username img invitations invited")
+        const users = await User.find({},"username img invitations invited email")
         const me = await User.findOne({email:req.user.email},"_id invitations")
         const userWithoutMe = users.filter(x=>x._id.toString() != me._id.toString())
         const invitationsFiltered = userWithoutMe.filter(x=>{
@@ -14,6 +15,7 @@ async function getSuggestedUsers(req,res)
             return !x.invited.includes(me._id.toString())
         })
         const sendUsers = []
+
         if(usersFiltered.length == 0)
         {
             res.sendStatus(404)
@@ -43,6 +45,7 @@ async function getSuggestedUsers(req,res)
                     sendUsers.push(usersFiltered[random])
                 }
             }
+            
             res.status(200).json(sendUsers)
         }
         

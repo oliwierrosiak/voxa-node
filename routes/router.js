@@ -12,6 +12,9 @@ import getSuggestedUsers from '../controller/getSuggestedUsers.js'
 import getUserImg from '../controller/getUserImg.js'
 import invitation from '../controller/invitation.js'
 import getMyInvitations from '../controller/getMyInvitations.js'
+import userInvitationModify from '../controller/userInvitationModify.js'
+import getMyNotifications from '../controller/getMyNotifications.js'
+import updateMyNotifications from '../controller/updateMyNotifications.js'
 dotenv.config()
 
 const Router = new express.Router()
@@ -35,5 +38,11 @@ Router.get('/get-user-img/:img',userAuthorizationMiddleware,getUserImg)
 Router.post('/invitation',userAuthorizationMiddleware,invitation)
 
 Router.get('/get-my-invitations',userAuthorizationMiddleware,getMyInvitations)  
+
+Router.patch('/modify-user-invitation',userAuthorizationMiddleware,userInvitationModify)
+
+Router.get('/get-my-notifications',userAuthorizationMiddleware,getMyNotifications)
+
+Router.patch('/update-notifications',userAuthorizationMiddleware,updateMyNotifications)
 
 export default Router

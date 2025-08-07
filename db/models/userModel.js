@@ -36,6 +36,10 @@ const UserSchema = new mongoose.Schema({
     invited:{
         type:Array,
         default:[],
+    },
+    notifications:{
+        type: Array,
+        default:[]
     }
 })
 

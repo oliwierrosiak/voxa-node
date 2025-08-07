@@ -1,4 +1,5 @@
 import { User } from "../db/dbConfig.js"
+import {io,sockets} from '../server/expressConfig.js'
 
 async function invitation(req,res)
 {
@@ -20,12 +21,17 @@ async function invitation(req,res)
             {
                 const myInvited = [...me.invited]
                 const invitedUserInvitations = [...invitedUser.invitations]
+                const invitedUserNotifications = [...invitedUser.notifications]
                 myInvited.push(invitedUser._id.toString())
                 invitedUserInvitations.push(me._id.toString())
                 me.invited = myInvited
                 invitedUser.invitations = invitedUserInvitations
+                
+                invitedUserNotifications.push({content:`Użytkownik ${me.username} wysłał ci zaproszenie do znajomych`,type:"invitation",img:me.img,date:new Date().getTime(),userId:me._id.toString()})
+                invitedUser.notifications = [...invitedUserNotifications]
                 await me.save()
                 await invitedUser.save()
+                io.to(sockets[invitedUser.email]).emit('notify',"add")
                 res.sendStatus(200)
             }
         }
