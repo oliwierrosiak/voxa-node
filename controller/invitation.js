@@ -27,7 +27,7 @@ async function invitation(req,res)
                 me.invited = myInvited
                 invitedUser.invitations = invitedUserInvitations
                 
-                invitedUserNotifications.push({content:`Użytkownik ${me.username} wysłał ci zaproszenie do znajomych`,type:"invitation",img:me.img,date:new Date().getTime(),userId:me._id.toString()})
+                invitedUserNotifications.push({content:`Użytkownik ${me.username} wysłał ci zaproszenie do znajomych`,type:"invitation",img:me.img,date:new Date().getTime(),userId:me._id.toString(),seen:false})
                 invitedUser.notifications = [...invitedUserNotifications]
                 await me.save()
                 await invitedUser.save()

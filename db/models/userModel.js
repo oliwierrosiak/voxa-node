@@ -37,9 +37,13 @@ const UserSchema = new mongoose.Schema({
         type:Array,
         default:[],
     },
-    notifications:{
+    notifications: {
         type: Array,
-        default:[]
+        default: [],
+    },
+    friends:{
+        type: Array,
+        default: []
     }
 })
 
