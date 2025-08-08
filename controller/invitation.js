@@ -19,7 +19,13 @@ async function invitation(req,res)
             }
             else
             {
-                const myInvited = [...me.invited]
+                if(me.friends.some(friend => friend.friendId === invitedUser._id.toString()))
+                {
+                    res.status(200).json({info:'user is my friend'})
+                }
+                else
+                {
+                 const myInvited = [...me.invited]
                 const invitedUserInvitations = [...invitedUser.invitations]
                 const invitedUserNotifications = [...invitedUser.notifications]
                 myInvited.push(invitedUser._id.toString())
@@ -33,6 +39,7 @@ async function invitation(req,res)
                 await invitedUser.save()
                 io.to(sockets[invitedUser.email]).emit('notify',"add")
                 res.sendStatus(200)
+                }
             }
         }
         

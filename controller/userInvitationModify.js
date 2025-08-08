@@ -30,7 +30,7 @@ async function userInvitationModify(req,res)
         {
             const me = await User.findOne({email:req.user.email})
             const myNotifications = [...me.notifications]
-            const index = myNotifications.findIndex(x=>x.time === req.body.time)
+            const index = myNotifications.findIndex(x=>x.date === req.body.time)
             myNotifications[index].seen = true
             await User.findByIdAndUpdate(me._id.toString(),{$set:{notifications:myNotifications}},{new:true})
             io.to(sockets[req.user.email]).emit('notifySeenUpdate')
@@ -52,13 +52,18 @@ async function userInvitationModify(req,res)
             invitedUserFriends.push({friendId:me._id.toString(),conversationId:id})
             me.friends = [...myFriends]
             invitedUser.friends = [...invitedUserFriends]
+            const invitedUserNotifications = [...invitedUser.notifications]
+             invitedUserNotifications.push({content:`Użytkownik ${me.username} dodał cię do znajomych`,type:"chat",img:me.img,date:new Date().getTime(),userId:me._id.toString(),seen:false})
+            invitedUser.notifications = [...invitedUserNotifications]
             await me.save()
             await invitedUser.save()
+            io.to(sockets[invitedUser.email]).emit('notify',"add")
             res.sendStatus(200)
         }
     }
     catch(ex)
     {
+        console.log(ex)
         res.sendStatus(500)
     }
     
