@@ -16,6 +16,7 @@ import userInvitationModify from '../controller/userInvitationModify.js'
 import getMyNotifications from '../controller/getMyNotifications.js'
 import updateMyNotifications from '../controller/updateMyNotifications.js'
 import getMyChats from '../controller/getMyChats.js'
+import getChat from '../controller/getChat.js'
 dotenv.config()
 
 const Router = new express.Router()
@@ -47,5 +48,7 @@ Router.get('/get-my-notifications',userAuthorizationMiddleware,getMyNotification
 Router.patch('/update-notifications',userAuthorizationMiddleware,updateMyNotifications)
 
 Router.get('/get-my-chats',userAuthorizationMiddleware,getMyChats)
+
+Router.get('/get-chat/:id',userAuthorizationMiddleware,getChat)
 
 export default Router
