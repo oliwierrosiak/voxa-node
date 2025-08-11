@@ -53,7 +53,7 @@ async function userInvitationModify(req,res)
             me.friends = [...myFriends]
             invitedUser.friends = [...invitedUserFriends]
             const invitedUserNotifications = [...invitedUser.notifications]
-             invitedUserNotifications.push({content:`Użytkownik ${me.username} dodał cię do znajomych`,type:"chat",img:me.img,date:new Date().getTime(),userId:me._id.toString(),seen:false})
+             invitedUserNotifications.push({content:`Użytkownik ${me.username} dodał cię do znajomych`,type:`chats/${id}`,img:me.img,date:new Date().getTime(),userId:me._id.toString(),seen:false})
             invitedUser.notifications = [...invitedUserNotifications]
             await me.save()
             await invitedUser.save()
