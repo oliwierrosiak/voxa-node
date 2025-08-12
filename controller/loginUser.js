@@ -16,7 +16,7 @@ async function loginUser(req,res)
             const refreshToken = jwt.sign({email:user.email},process.env.REFRESH_TOKEN, {expiresIn:"1h"})
             const refresh = new JwtRefreshToken({refreshToken})
             await refresh.save()
-            res.status(200).json({token:token,refreshToken:refreshToken,email:user.email,name:user.name,username:user.username})
+            res.status(200).json({token:token,refreshToken:refreshToken,email:user.email,name:user.name,username:user.username,id:user._id.toString()})
         }
         else
         {
