@@ -10,14 +10,22 @@ async function messageSeen(req,res)
         const usersOnChat = await User.find({"friends.conversationId":req.body.chatId})
         const secondUser = usersOnChat.filter(x=>x._id != me._id.toString())
         const chatContent = [...chat.content]
+        let hasUpdated = false
         chatContent.forEach(x=>{
             if(x.sender != me._id.toString())
             {
+                if(x.status === "sent")
+                {
+                    hasUpdated = true
+                }
                 return x.status = "seen"
             }
         })
         await Chat.findByIdAndUpdate(chat._id.toString(),{$set:{content:chatContent}},{new:true})
-        io.to(sockets[secondUser[0].email]).emit('chatUpdate',{chat:req.body.chatId,type:'seen'})
+        if(hasUpdated)
+        {
+            io.to(sockets[secondUser[0].email]).emit('chatUpdate',{chat:req.body.chatId,type:'seen'})
+        }
         res.sendStatus(200)
     }
     catch(ex)
