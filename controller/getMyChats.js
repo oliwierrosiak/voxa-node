@@ -17,6 +17,14 @@ async function getMyChats(req,res)
             userObj.conversationId = lastMessageObject._id.toString()
             userObj.time = lastMessageObject._id.getTimestamp()
             userObj.message = lastMessage[0]?.message || "Przywitaj się i rozpocznij konwersacje!"
+            if(lastMessage[0].sender === user._id.toString())
+            {
+                userObj.seen = lastMessage[0].status
+            }
+            else
+            {
+                userObj.seen = 'seen'
+            }
             returnObject.push(userObj)
 
         }
