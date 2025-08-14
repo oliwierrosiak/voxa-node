@@ -32,6 +32,7 @@ async function getMyChats(req,res)
             {
                 userObj.seen = 'seen'
             }
+            userObj.sender = lastMessage[0]?.sender
             returnObject.push(userObj)
 
         }
@@ -52,7 +53,5 @@ async function getMyChats(req,res)
         res.sendStatus(500)
     }
 }
-
-//ogarnac sortowanie w przypadku kiedy juz sa jakies wiadomosci na czacie
 
 export default getMyChats
