@@ -15,9 +15,16 @@ async function getMyChats(req,res)
             const lastMessage =  lastMessageObject.content.sort((a,b)=>{return b.time - a.time})
             const userObj = user.toObject()
             userObj.conversationId = lastMessageObject._id.toString()
-            userObj.time = lastMessageObject._id.getTimestamp()
             userObj.message = lastMessage[0]?.message || "Przywitaj się i rozpocznij konwersacje!"
-            if(lastMessage[0].sender === user._id.toString())
+            if(userObj.message === "Przywitaj się i rozpocznij konwersacje!")
+            {
+                userObj.time = lastMessageObject._id.getTimestamp()
+            }
+            else
+            {
+                userObj.time = lastMessage[0].time
+            }
+            if(lastMessage[0]?.sender === user._id.toString())
             {
                 userObj.seen = lastMessage[0].status
             }
