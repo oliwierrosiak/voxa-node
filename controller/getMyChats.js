@@ -13,6 +13,7 @@ async function getMyChats(req,res)
             const user = await User.findOne({_id:myFriends[i].friendId},"img username")
             const lastMessageObject = await Chat.findOne({_id:myFriends[i].conversationId},"content")
             const lastMessage =  lastMessageObject.content.sort((a,b)=>{return b.time - a.time})
+
             const userObj = user.toObject()
             userObj.conversationId = lastMessageObject._id.toString()
             userObj.message = lastMessage[0]?.message || "Przywitaj się i rozpocznij konwersacje!"
@@ -31,6 +32,10 @@ async function getMyChats(req,res)
             else
             {
                 userObj.seen = 'seen'
+            }
+            if(lastMessage[0]?.type)
+            {   
+                userObj.type = lastMessage[0].type
             }
             userObj.sender = lastMessage[0]?.sender
             returnObject.push(userObj)

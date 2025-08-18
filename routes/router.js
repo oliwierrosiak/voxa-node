@@ -19,6 +19,9 @@ import getMyChats from '../controller/getMyChats.js'
 import getChat from '../controller/getChat.js'
 import updateChat from '../controller/updateChat.js'
 import messageSeen from '../controller/messageSeen.js'
+import upload from '../middleware/uploadVoiceMessage.js'
+import uploadVoiceMessage from '../controller/uploadVoiceMessage.js'
+import getVoiceMessage from '../controller/getVoiceMessage.js'
 dotenv.config()
 
 const Router = new express.Router()
@@ -56,5 +59,9 @@ Router.get('/get-chat/:id',userAuthorizationMiddleware,getChat)
 Router.post('/update-chat',userAuthorizationMiddleware,updateChat)
 
 Router.patch('/message-seen',userAuthorizationMiddleware,messageSeen)
+
+Router.post('/send-voice-message',userAuthorizationMiddleware,upload.single('audio'),uploadVoiceMessage)
+
+Router.get('/get-voice-message/:file',userAuthorizationMiddleware,getVoiceMessage)
 
 export default Router
