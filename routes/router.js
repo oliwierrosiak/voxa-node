@@ -24,6 +24,7 @@ import uploadVoiceMessage from '../controller/uploadVoiceMessage.js'
 import getVoiceMessage from '../controller/getVoiceMessage.js'
 import uploadChatImgs from '../controller/uploadChatImgs.js'
 import uploadChatImg from '../middleware/uploadChatsImgs.js'
+import getChatImg from '../controller/getChatImg.js'
 
 dotenv.config()
 
@@ -68,5 +69,7 @@ Router.post('/send-voice-message',userAuthorizationMiddleware,upload.single('aud
 Router.get('/get-voice-message/:file',userAuthorizationMiddleware,getVoiceMessage)
 
 Router.post('/upload-chat-images',userAuthorizationMiddleware,uploadChatImg.array('images',10),uploadChatImgs)
+
+Router.get('/get-chat-img/:img',userAuthorizationMiddleware,getChatImg)
 
 export default Router
