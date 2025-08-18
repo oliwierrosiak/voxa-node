@@ -22,6 +22,9 @@ import messageSeen from '../controller/messageSeen.js'
 import upload from '../middleware/uploadVoiceMessage.js'
 import uploadVoiceMessage from '../controller/uploadVoiceMessage.js'
 import getVoiceMessage from '../controller/getVoiceMessage.js'
+import uploadChatImgs from '../controller/uploadChatImgs.js'
+import uploadChatImg from '../middleware/uploadChatsImgs.js'
+
 dotenv.config()
 
 const Router = new express.Router()
@@ -63,5 +66,7 @@ Router.patch('/message-seen',userAuthorizationMiddleware,messageSeen)
 Router.post('/send-voice-message',userAuthorizationMiddleware,upload.single('audio'),uploadVoiceMessage)
 
 Router.get('/get-voice-message/:file',userAuthorizationMiddleware,getVoiceMessage)
+
+Router.post('/upload-chat-images',userAuthorizationMiddleware,uploadChatImg.array('images',10),uploadChatImgs)
 
 export default Router
