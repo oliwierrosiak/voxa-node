@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
         cb(null,`${projectRoot}/uploads/chat-img/`)
     },
     filename:(req,file,cb)=>{
-        cb(null,Date.now()+Math.floor(Math.random()*10000)+path.extname(file.originalname))
+        cb(null,Date.now()+path.extname(file.originalname))
     }
 })
 

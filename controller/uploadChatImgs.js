@@ -17,7 +17,7 @@ async function uploadChatImgs(req,res)
         files.forEach(x=>{
             filenames.push(x.filename)
         })
-        chatContent.push({time:Date.now(),message:filenames,status:'sent',sender:me._id.toString(),type:files.at(-1).mimetype.includes('video')?"video":"photos"})
+        chatContent.push({time:Date.now(),message:filenames.sort(),status:'sent',sender:me._id.toString(),type:files.at(-1).mimetype.includes('video')?"video":"photos"})
         await Chat.findByIdAndUpdate(chat._id.toString(),{$set:{content:chatContent}},{new:true})
         io.to(sockets[me.email]).emit('chatUpdate',{chat:req.body.chatId})
         io.to(sockets[secondUser.email]).emit('chatUpdate',{type:"new",chat:req.body.chatId})
