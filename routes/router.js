@@ -26,6 +26,9 @@ import uploadChatImgs from '../controller/uploadChatImgs.js'
 import uploadChatImg from '../middleware/uploadChatsImgs.js'
 import getChatImg from '../controller/getChatImg.js'
 import getChatImgsData from '../controller/getChatImgsData.js'
+import fileUpload from '../middleware/uploadFile.js'
+import uploadFile from '../controller/uploadFile.js'
+import downloadFile from '../controller/downloadFile.js'
 
 dotenv.config()
 
@@ -74,5 +77,9 @@ Router.post('/upload-chat-images',userAuthorizationMiddleware,uploadChatImg.arra
 Router.get('/get-chat-img/:img',userAuthorizationMiddleware,getChatImg)
 
 Router.get('/get-chat-imgs-data/:chatId',userAuthorizationMiddleware,getChatImgsData)
+
+Router.post('/upload-file',userAuthorizationMiddleware,fileUpload.single('file'),uploadFile)
+
+Router.get('/download-file/:filename/:name',downloadFile)
 
 export default Router
