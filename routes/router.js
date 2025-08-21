@@ -80,6 +80,6 @@ Router.get('/get-chat-imgs-data/:chatId',userAuthorizationMiddleware,getChatImgs
 
 Router.post('/upload-file',userAuthorizationMiddleware,fileUpload.single('file'),uploadFile)
 
-Router.get('/download-file/:filename/:name',downloadFile)
+Router.get('/download-file/:filename',downloadFile)
 
 export default Router
