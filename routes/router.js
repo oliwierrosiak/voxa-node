@@ -30,6 +30,7 @@ import fileUpload from '../middleware/uploadFile.js'
 import uploadFile from '../controller/uploadFile.js'
 import downloadFile from '../controller/downloadFile.js'
 import search from '../controller/search.js'
+import googleLogin from '../controller/googleLogin.js'
 
 dotenv.config()
 
@@ -38,6 +39,8 @@ const Router = new express.Router()
 Router.post('/register',uploadHandler.single("image"),registerUser)
 
 Router.post('/login',loginUser)
+
+Router.post('/google-login',googleLogin)
 
 Router.post('/refresh-token',refreshToken)
 
@@ -84,6 +87,8 @@ Router.post('/upload-file',userAuthorizationMiddleware,fileUpload.single('file')
 Router.get('/download-file/:filename',userAuthorizationMiddleware,downloadFile)
 
 Router.get('/search/:searchValue',userAuthorizationMiddleware,search)
+
+
 
 
 
