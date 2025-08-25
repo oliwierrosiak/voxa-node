@@ -14,7 +14,7 @@ async function registerUser(payload,usernameExist,userPhoto)
         name:payload.name,
         email:payload.email,
         password:`ZAQ!2wsx`,
-        username:usernameExist?`GoogleUser-${Math.floor(Math.random()*1000)}`:payload.given_name,
+        username:usernameExist?`user-${Math.floor(Math.random()*100)}`:payload.given_name,
         img:userPhoto?userPhoto:'default.jpg'
     })
     await user.save()

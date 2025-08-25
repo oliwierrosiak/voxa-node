@@ -31,6 +31,8 @@ import uploadFile from '../controller/uploadFile.js'
 import downloadFile from '../controller/downloadFile.js'
 import search from '../controller/search.js'
 import googleLogin from '../controller/googleLogin.js'
+import getProfile from '../controller/getProfile.js'
+import updateUserImg from '../controller/updateUserImg.js'
 
 dotenv.config()
 
@@ -88,7 +90,9 @@ Router.get('/download-file/:filename',userAuthorizationMiddleware,downloadFile)
 
 Router.get('/search/:searchValue',userAuthorizationMiddleware,search)
 
+Router.get('/get-profile',userAuthorizationMiddleware,getProfile)
 
+Router.post('/update-user-img',userAuthorizationMiddleware,uploadHandler.single("image"),updateUserImg)
 
 
 
