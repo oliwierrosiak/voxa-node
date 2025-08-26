@@ -3,7 +3,11 @@ import fs from 'fs'
 import { projectRoot } from "../app.js"
 
 const deletePhoto = async(filename) =>{
-    fs.unlink(`${projectRoot}/uploads/userImg/${filename}`,(err)=>{})
+    if(filename != "default.jpg")
+    {
+        fs.unlink(`${projectRoot}/uploads/userImg/${filename}`,(err)=>{})
+
+    }
 }
 
 async function updateUserImg(req,res)
