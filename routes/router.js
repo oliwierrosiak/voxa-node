@@ -33,6 +33,9 @@ import search from '../controller/search.js'
 import googleLogin from '../controller/googleLogin.js'
 import getProfile from '../controller/getProfile.js'
 import updateUserImg from '../controller/updateUserImg.js'
+import updateName from '../controller/updateName.js'
+import updateUsername from '../controller/updateUsername.js'
+import resetPassword from '../controller/resetPassword.js'
 
 dotenv.config()
 
@@ -94,6 +97,11 @@ Router.get('/get-profile',userAuthorizationMiddleware,getProfile)
 
 Router.post('/update-user-img',userAuthorizationMiddleware,uploadHandler.single("image"),updateUserImg)
 
+Router.patch('/update-name',userAuthorizationMiddleware,updateName)
+
+Router.patch('/update-username',userAuthorizationMiddleware,updateUsername)
+
+Router.get('/reset-password',userAuthorizationMiddleware,resetPassword)
 
 
 export default Router

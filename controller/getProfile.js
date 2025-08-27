@@ -9,7 +9,7 @@ async function getProfile(req,res)
     }
     catch(ex)
     {
-        res.sensStatus(500)
+        res.sendStatus(500)
     }
 }
 
