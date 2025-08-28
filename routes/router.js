@@ -38,6 +38,7 @@ import updateUsername from '../controller/updateUsername.js'
 import resetPassword from '../controller/resetPassword.js'
 import getResetPasswordToken from '../controller/getResetPasswordToken.js'
 import PostResetPassword from '../controller/postResetPassword.js'
+import deleteAccount from '../controller/deleteAccount.js'
 
 dotenv.config()
 
@@ -108,6 +109,8 @@ Router.get('/reset-password',userAuthorizationMiddleware,resetPassword)
 Router.get('/reset-password-token/:token',getResetPasswordToken)
 
 Router.post('/reset-password',PostResetPassword)
+
+Router.put('/delete-account',userAuthorizationMiddleware,deleteAccount)
 
 
 export default Router

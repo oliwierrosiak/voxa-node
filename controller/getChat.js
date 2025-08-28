@@ -7,11 +7,17 @@ async function getChat(req,res)
     {
         const chat = await Chat.findOne({_id:req.params.id})
         const users = await User.find({"friends.conversationId":req.params.id})
-        const user = users.filter(x=>x.email != req.user.email)
+        let user = users.filter(x=>x.email != req.user.email)
+        if(!user[0])
+        {
+
+            user = [{img:'default.jpg',username:'Unknown',name:'Unknown'}]
+        }
         res.status(200).json({chat:chat.content,user:{img:user[0].img,username:user[0].username}})
     }
     catch(ex)
     {
+        console.log(ex)
         res.sendStatus(500)
     }
 }

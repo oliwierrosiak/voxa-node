@@ -7,7 +7,7 @@ export const gettingMyChats = async(myFriends,i)=>
     const lastMessageObject = await Chat.findOne({_id:myFriends[i].conversationId},"content")
     const lastMessage =  lastMessageObject.content.sort((a,b)=>{return b.time - a.time})
 
-    const userObj = user.toObject()
+    const userObj = user?user.toObject():{img:'default.jpg',username:'Unknown',name:'Unknown'}
     userObj.conversationId = lastMessageObject._id.toString()
     userObj.message = lastMessage[0]?.message || "Przywitaj się i rozpocznij konwersacje!"
     if(userObj.message === "Przywitaj się i rozpocznij konwersacje!")
@@ -18,7 +18,7 @@ export const gettingMyChats = async(myFriends,i)=>
     {
         userObj.time = lastMessage[0].time
     }
-    if(lastMessage[0]?.sender === user._id.toString())
+    if(lastMessage[0]?.sender === user?._id.toString())
     {
         userObj.seen = lastMessage[0].status
     }
@@ -58,7 +58,6 @@ async function getMyChats(req,res)
     }
     catch(ex)
     {
-        console.log(ex)
         res.sendStatus(500)
     }
 }
