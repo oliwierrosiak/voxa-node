@@ -36,6 +36,8 @@ import updateUserImg from '../controller/updateUserImg.js'
 import updateName from '../controller/updateName.js'
 import updateUsername from '../controller/updateUsername.js'
 import resetPassword from '../controller/resetPassword.js'
+import getResetPasswordToken from '../controller/getResetPasswordToken.js'
+import PostResetPassword from '../controller/postResetPassword.js'
 
 dotenv.config()
 
@@ -102,6 +104,10 @@ Router.patch('/update-name',userAuthorizationMiddleware,updateName)
 Router.patch('/update-username',userAuthorizationMiddleware,updateUsername)
 
 Router.get('/reset-password',userAuthorizationMiddleware,resetPassword)
+
+Router.get('/reset-password-token/:token',getResetPasswordToken)
+
+Router.post('/reset-password',PostResetPassword)
 
 
 export default Router
