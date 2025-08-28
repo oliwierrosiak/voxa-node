@@ -6,6 +6,14 @@ async function registerUser(req,res)
     
     try
     {
+        if(req.body.username === "Unknown")
+        {
+            const error = {
+                code:11000,
+                keyValue:{username:'reserved'}
+            }
+            throw error
+        }
         const user = new User({
             name:req.body.name,
             email:req.body.email,
