@@ -18,7 +18,6 @@ async function clearExpiredTokens()
     }       
     catch(ex)
     {
-        console.log(ex)
     }
 }
 

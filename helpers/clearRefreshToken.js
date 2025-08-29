@@ -4,11 +4,11 @@ async function clearRefreshTokens()
 {
     try
     {   
-        await JwtRefreshToken.deleteMany({expireTime:{ $lt: Date.now()}})
+        const date = new Date()
+        await JwtRefreshToken.deleteMany({expireTime:{ $lt:date.getTime()}})
     }
     catch(ex)
     {
-        console.log(ex)
     }
 }
 

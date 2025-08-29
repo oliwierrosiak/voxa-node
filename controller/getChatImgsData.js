@@ -18,7 +18,6 @@ async function getChatImgsData(req,res)
     }
     catch(ex)
     {
-        console.log(ex)
         res.sendStatus(500)
     }
 }

@@ -9,6 +9,7 @@ async function refreshToken (req,res)
     const { token } = req.body
     try
     {
+        await clearRefreshTokens()
         
         const refresh = await JwtRefreshToken.findOne({refreshToken:token})
         if(refresh.refreshToken === token)
@@ -34,7 +35,6 @@ async function refreshToken (req,res)
     {
         res.sendStatus(403)
     }
-    clearRefreshTokens()
 }
 
 export default refreshToken

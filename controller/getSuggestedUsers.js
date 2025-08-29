@@ -58,7 +58,6 @@ async function getSuggestedUsers(req,res)
     }
     catch(ex)
     {
-        console.log(ex)
         res.sendStatus(500)
     }
 }

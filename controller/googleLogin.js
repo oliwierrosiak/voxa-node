@@ -40,7 +40,7 @@ async function getUserPhoto(link)
     }
     catch(ex)
     {
-        console.log(ex)
+
     }   
 }
 
@@ -48,7 +48,8 @@ async function login(payload) {
     const user = await User.findOne({email:payload.email},"_id email name username")
     const token = jwt.sign({email:payload.email},process.env.ACCESS_TOKEN,{ expiresIn : "15s"})
     const refreshToken = jwt.sign({email:payload.email},process.env.REFRESH_TOKEN, {expiresIn:"1h"})
-    const refresh = new JwtRefreshToken({refreshToken})
+    const date = new Date()
+    const refresh = new JwtRefreshToken({refreshToken,expireTime:date.getTime() + 3600000})
     await refresh.save()
     return {token,refreshToken,id:user._id.toString(),name:user.name,username:user.username,email:user.email}
 }

@@ -14,7 +14,8 @@ async function loginUser(req,res)
         {
             const token = jwt.sign({email:user.email},process.env.ACCESS_TOKEN,{ expiresIn : "15s"})
             const refreshToken = jwt.sign({email:user.email},process.env.REFRESH_TOKEN, {expiresIn:"1h"})
-            const refresh = new JwtRefreshToken({refreshToken})
+            const date = new Date()
+            const refresh = new JwtRefreshToken({refreshToken,expireTime:date.getTime() + 3600000})
             await refresh.save()
             res.status(200).json({token:token,refreshToken:refreshToken,email:user.email,name:user.name,username:user.username,id:user._id.toString()})
         }

@@ -6,7 +6,6 @@ const jwtRefreshTokenModel = new mongoose.Schema({
     },
     expireTime:{
         type: Number,
-        default: Date.now() + 3600000
     }
 })
 
