@@ -18,7 +18,7 @@ export const gettingMyChats = async(myFriends,i)=>
     {
         userObj.time = lastMessage[0].time
     }
-    if(lastMessage[0]?.sender === user?._id.toString())
+    if(lastMessage[0]?.status && lastMessage[0]?.sender === user?._id.toString())
     {
         userObj.seen = lastMessage[0].status
     }
@@ -58,6 +58,7 @@ async function getMyChats(req,res)
     }
     catch(ex)
     {
+        console.log(ex)
         res.sendStatus(500)
     }
 }
