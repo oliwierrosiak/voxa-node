@@ -7,6 +7,8 @@ const storage = multer.diskStorage({
         cb(null,`${projectRoot}/uploads/chat-img/`)
     },
     filename:(req,file,cb)=>{
+        const time = Date.now()
+        req.time = time
         cb(null,Date.now()+path.extname(file.originalname))
     }
 })

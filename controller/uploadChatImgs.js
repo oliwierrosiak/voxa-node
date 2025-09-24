@@ -1,6 +1,27 @@
 import { Chat } from "../db/dbConfig.js"
 import { User } from "../db/dbConfig.js"
 import {io,sockets} from '../server/expressConfig.js'
+import ffmpegPath from "ffmpeg-static"
+import { execFile } from 'child_process'
+
+const makeScreenshot = (videoPath,outputPath) =>{
+    return new Promise((resolve,reject)=>{
+        execFile(
+            ffmpegPath,
+            [
+            "-ss", "00:00:02",
+            "-i", videoPath,
+            "-frames:v", "1",
+            "-q:v", "2", 
+            outputPath
+      ],
+      (err) => {
+        if (err) return reject(err);
+        resolve(outputPath);
+      }
+    );
+    })
+}
 
 async function uploadChatImgs(req,res)
 {
@@ -14,13 +35,25 @@ async function uploadChatImgs(req,res)
         const chatContent = [...chat.content]
         const files = [...req.files]
         const filenames = []
-        files.forEach(x=>{
-            filenames.push(x.filename)
-        })
+        for(let i = 0;i<files.length;i++)
+        {
+            if(files[i].mimetype.includes('image'))
+            {
+                filenames.push(files[i].filename)
+            }
+            else
+            {
+                const filename = files[i].filename.split('.')[0]
+                await makeScreenshot(files[i].path,`uploads/chat-img/${filename}.jpg`)
+                filenames.push(`${filename}.jpg`)
+            }
+        }
         chatContent.push({time:Date.now(),message:filenames.sort(),status:'sent',sender:me._id.toString(),type:files.at(-1).mimetype.includes('video')?"video":"photos"})
         await Chat.findByIdAndUpdate(chat._id.toString(),{$set:{content:chatContent}},{new:true})
         io.to(sockets[me.email]).emit('chatUpdate',{chat:req.body.chatId})
         io.to(sockets[secondUser.email]).emit('chatUpdate',{type:"new",chat:req.body.chatId})
+        
+
         res.sendStatus(200)
 
     }

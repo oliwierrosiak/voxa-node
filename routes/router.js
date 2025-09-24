@@ -39,6 +39,7 @@ import resetPassword from '../controller/resetPassword.js'
 import getResetPasswordToken from '../controller/getResetPasswordToken.js'
 import PostResetPassword from '../controller/postResetPassword.js'
 import deleteAccount from '../controller/deleteAccount.js'
+import getChatImgInfo from '../controller/getChatImgInfo.js'
 
 dotenv.config()
 
@@ -87,6 +88,8 @@ Router.get('/get-voice-message/:file',userAuthorizationMiddleware,getVoiceMessag
 Router.post('/upload-chat-images',userAuthorizationMiddleware,uploadChatImg.array('images',10),uploadChatImgs)
 
 Router.get('/get-chat-img/:img',userAuthorizationMiddleware,getChatImg)
+
+Router.get('/get-chat-img-info/:img',userAuthorizationMiddleware,getChatImgInfo)
 
 Router.get('/get-chat-imgs-data/:chatId',userAuthorizationMiddleware,getChatImgsData)
 
