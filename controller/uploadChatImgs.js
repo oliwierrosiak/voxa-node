@@ -41,9 +41,17 @@ async function uploadChatImgs(req,res)
         {
             if(files[i].mimetype.includes('image'))
             {
-                await sharp(files[i].path).resize({width:1920}).webp({quality:50}).toFile(`uploads/chat-img/${files[i].filename.split('.')[0]}.webp`)
-                filenames.push(`${files[i].filename.split('.')[0]}.webp`)
-                fs.unlinkSync(`uploads/chat-img/${files[i].filename}`)
+                if(files[i].filename.split('.')[1] === "webp")
+                {
+                    filenames.push(files[i].filename)
+                }
+                else
+                {
+                    await sharp(files[i].path).resize({width:1920}).webp({quality:50}).toFile(`uploads/chat-img/${files[i].filename.split('.')[0]}.webp`)
+                    filenames.push(`${files[i].filename.split('.')[0]}.webp`)
+                    fs.unlinkSync(`uploads/chat-img/${files[i].filename}`)
+                }
+                
             }
             else
             {
@@ -63,6 +71,7 @@ async function uploadChatImgs(req,res)
     }
     catch(ex)
     {
+        console.log(ex)
         res.sendStatus(500)
     }
 }
