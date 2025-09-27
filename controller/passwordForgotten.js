@@ -32,7 +32,6 @@ async function passwordForgotten(req,res)
     }
     catch(ex)
     {
-        console.log(ex)
         res.sendStatus(200)
     }
     
