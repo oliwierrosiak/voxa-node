@@ -11,6 +11,7 @@ export const server = http.createServer(App)
 App.use(cors({origin:[
     /^http:\/\/localhost(:\d+)?$/,
       /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
+      /^https:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
 ], credentials:true}))
 
 App.use(express.json())
@@ -22,6 +23,7 @@ export const io = new Server(server,{
         origin:[
             /^http:\/\/localhost(:\d+)?$/,
             /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
+            /^https:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
         ],
         methods:['GET','POST'],
         credentials:true

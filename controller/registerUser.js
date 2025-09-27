@@ -1,11 +1,17 @@
 import { User } from "../db/dbConfig.js"
 import fs from 'fs'
+import sharp from "sharp"
 
 async function registerUser(req,res)
 {
     
     try
     {
+        if(req.file)
+        {
+            await sharp(req.file.path).resize({width:400}).webp({quality:50}).toFile(`uploads/userImg/${req.file.filename.split('.')[0]}.webp`)
+            fs.unlinkSync(req.file.path)
+        }
         if(req.body.username === "Unknown")
         {
             const error = {
@@ -19,7 +25,7 @@ async function registerUser(req,res)
             email:req.body.email,
             password:req.body.password,
             username:req.body.username,
-            img:req.file?.filename || "default.jpg"
+            img:`${req.file?.filename.split('.')[0]}.webp` || "default.jpg"
         })
 
         const save = await user.save()
@@ -27,6 +33,7 @@ async function registerUser(req,res)
     }
     catch(ex)
     {
+        console.log(ex)
 
         const response = {
             status:400,
@@ -69,7 +76,7 @@ async function registerUser(req,res)
         }
         if(req.file?.filename)
         {
-            fs.unlink(`uploads/userImg/${req.file.filename}`,(err)=>{})
+            fs.unlink(`${req.file.path}`,(err)=>{})
         }
         res.status(400).json(response)
     }
