@@ -28,7 +28,26 @@ async function getSuggestedUsers(req,res)
         }
         else if(usersFiltered.length < 15)
         {
-            res.status(200).json(usersFiltered)
+            for(let i = 0;i<usersFiltered.length;i++)
+            {
+                const random = Math.floor(Math.random()*usersFiltered.length)
+                let repeated = false
+                sendUsers.forEach((x)=>{
+                    if(x._id.toString() === usersFiltered[random]._id.toString())
+                    {
+                        repeated = true
+                    }
+                })
+                if(repeated)
+                {
+                    i--
+                }
+                else
+                {
+                    sendUsers.push(usersFiltered[random])
+                }
+            }
+            res.status(200).json(sendUsers)
         }
         else
         {
