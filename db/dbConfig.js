@@ -14,4 +14,6 @@ export const Chat = mongoose.model('chat',ChatModel)
 
 export const ResetPassword = mongoose.model('resetPassword',ResetPasswordModel)
 
-mongoose.connect(process.env.DATABASE)
+mongoose.connect(process.env.DATABASE,{
+    dbName:'voxa',
+})
