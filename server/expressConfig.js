@@ -9,9 +9,8 @@ const App = express()
 export const server = http.createServer(App)
 
 App.use(cors({origin:[
-    /^http:\/\/localhost(:\d+)?$/,
-      /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
-      /^https:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
+    'https://voxa-chats.web.app',
+    'https://voxa-chats.firebaseapp.com'
 ], credentials:true}))
 
 App.use(express.json())
@@ -21,9 +20,8 @@ App.use(express.json())
 export const io = new Server(server,{
     cors:{
         origin:[
-            /^http:\/\/localhost(:\d+)?$/,
-            /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
-            /^https:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
+            'https://voxa-chats.web.app',
+            'https://voxa-chats.firebaseapp.com'
         ],
         methods:['GET','POST'],
         credentials:true
