@@ -58,15 +58,11 @@ async function googleLogin(req,res)
 {
     try
     {
-        const googleClient = new OAuth2Client('294845836411-uisma3kqknrvl4a1veghuvdt1j1dun1t.apps.googleusercontent.com')
+         const googleUser = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: { Authorization: `Bearer ${req.body.token}` },
+        });
 
-        const ticket = await googleClient.verifyIdToken({
-            idToken: req.body.token,
-            audience:'294845836411-uisma3kqknrvl4a1veghuvdt1j1dun1t.apps.googleusercontent.com'
-        })
-
-        const payload = ticket.getPayload()
-        
+        const payload = googleUser.data
 
         const user = await User.findOne({email:payload.email})
         if(user)
