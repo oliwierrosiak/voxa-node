@@ -1,22 +1,36 @@
+import { PutObjectCommand } from "@aws-sdk/client-s3"
 import { User } from "../db/dbConfig.js"
 import fs from 'fs'
 import path from "path"
 import sharp from "sharp"
+import { s3 } from "../s3/s3Config.js"
 
-const clearTemp = async() =>
+export const clearTemp = async() =>
 {
-    try
-    {
-        const folder = 'uploads/userImg/user-temp'
-        const files = await fs.promises.readdir(folder)
-        for(const file of files)
-        {
-            await fs.promises.unlink(path.join(folder,file))
-        }
 
-    }
-    catch(ex)
+    const folderTemp = 'uploads/userImg/user-temp'
+    const folder = 'uploads/userImg'
+    const files = await fs.promises.readdir(folderTemp)
+    const images = await fs.promises.readdir(folder)
+    for(const file of files)
     {
+        try
+        {
+            await fs.promises.unlink(path.join(folderTemp,file))
+
+        }
+        catch(ex)
+        {}
+    }
+    for(const img of images)
+    {
+        try
+        {
+            await fs.promises.unlink(path.join(folder,img))
+
+        }
+        catch(ex)
+        {}
     }
 }
 
@@ -41,11 +55,19 @@ async function registerUser(req,res)
         let img
         if(req.file && req.file?.filename.split('.')[0])
         {
-            img = `${req.file?.filename.split('.')[0]}.webp`
+            const buffer = fs.readFileSync(`uploads/userImg/${req.file.filename.split('.')[0]}.webp`)
+            const command = new PutObjectCommand({
+                Bucket:process.env.AWS_BUCKET_NAME,
+                Key:`userImg/${req.file?.filename.split('.')[0]}.webp`,
+                Body:buffer,
+                ContentType:req.file.mimetype
+            })
+            await s3.send(command)
+            img = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/userImg/${req.file?.filename.split('.')[0]}.webp`
         }
         else
         {
-            img = "default.jpg"
+            img = "https://voxa-chats.s3.eu-north-1.amazonaws.com/userImg/default.jpg"
         }
         const user = new User({
             name:req.body.name,
@@ -61,6 +83,7 @@ async function registerUser(req,res)
     }
     catch(ex)
     {
+        console.log(ex)
         const response = {
             status:400,
             ok:false,
@@ -100,11 +123,7 @@ async function registerUser(req,res)
                 }
             }
         }
-        if(req.file?.filename)
-        {
-            fs.unlink(`${req.file.path}`,(err)=>{})
-            fs.unlink(`uploads/userImg/${req.file.filename.split(".")[0]}.webp`,(err)=>{})
-        }
+        clearTemp()
         res.status(400).json(response)
     }
 }

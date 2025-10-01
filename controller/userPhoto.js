@@ -7,8 +7,7 @@ async function userPhoto(req,res)
     try
     {
         const user = await User.findOne({email:req.user.email},"img")
-        const pathToImg = path.join(projectRoot,`uploads/userImg/${user.img}`)
-        res.sendFile(pathToImg)
+        res.status(200).json({userImg:user.img})
     }
     catch(ex)
     {

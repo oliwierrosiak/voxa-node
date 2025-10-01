@@ -1,15 +1,24 @@
 import bcrypt from 'bcrypt'
 import { User } from '../db/dbConfig.js'
-import fs from 'fs'
-import { projectRoot } from '../app.js'
+import { DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { s3 } from '../s3/s3Config.js'
 
 async function deleteUserImg(img)
 {
-    if(img !== "default.jpg")
+    try
     {
-        fs.unlink(`${projectRoot}/uploads/userImg/${img}`,(err)=>{
-        })
+        if(img !== "https://voxa-chats.s3.eu-north-1.amazonaws.com/userImg/default.jpg")
+        {
+            const key = img.split('/').at(-1)
+            const command = new DeleteObjectCommand({
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key:`userImg/${key}`,
+            })
+            s3.send(command)
+        }
     }
+    catch(ex)
+    {}
 }
 
 async function deleteAccount(req,res)

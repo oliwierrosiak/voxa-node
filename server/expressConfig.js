@@ -10,7 +10,8 @@ export const server = http.createServer(App)
 
 App.use(cors({origin:[
     'https://voxa-chats.web.app',
-    'https://voxa-chats.firebaseapp.com'
+    'https://voxa-chats.firebaseapp.com',
+    'http://localhost:3000'
 ], credentials:true}))
 
 App.use(express.json())
@@ -21,7 +22,8 @@ export const io = new Server(server,{
     cors:{
         origin:[
             'https://voxa-chats.web.app',
-            'https://voxa-chats.firebaseapp.com'
+            'https://voxa-chats.firebaseapp.com',
+            'http://localhost:3000'
         ],
         methods:['GET','POST'],
         credentials:true

@@ -1,10 +1,11 @@
-import { projectRoot } from "../app.js"
+import { User } from "../db/dbConfig.js"
 
-function getUserImg(req,res)
+async function getUserImg(req,res)
 {
     try
     {
-        res.sendFile(`${projectRoot}/uploads/userImg/${req.params.img}`)
+        const userImg = await User.findOne({email:req.user.email},'img')
+        res.status(200).json({userImg:userImg.img})
     }
     catch(ex)
     {

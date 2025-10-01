@@ -11,7 +11,7 @@ async function getChat(req,res)
         if(!user[0])
         {
 
-            user = [{img:'default.jpg',username:'Unknown',name:'Unknown'}]
+            user = [{img:'https://voxa-chats.s3.eu-north-1.amazonaws.com/userImg/default.jpg',username:'Unknown',name:'Unknown'}]
         }
         res.status(200).json({chat:chat.content,user:{img:user[0].img,username:user[0].username}})
     }
