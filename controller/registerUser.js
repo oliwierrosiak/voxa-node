@@ -83,7 +83,6 @@ async function registerUser(req,res)
     }
     catch(ex)
     {
-        console.log(ex)
         const response = {
             status:400,
             ok:false,

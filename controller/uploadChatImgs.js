@@ -6,8 +6,37 @@ import { execFile } from 'child_process'
 import sharp from "sharp"
 import fs from 'fs'
 import Ffmpeg from "fluent-ffmpeg"
-
+import { PutObjectCommand } from "@aws-sdk/client-s3"
+import dotenv from 'dotenv'
+import { s3 } from "../s3/s3Config.js"
+import path from "path"
+dotenv.config()
 Ffmpeg.setFfmpegPath(ffmpegPath)
+
+const clearTemp = async() =>{
+
+    const folder = 'uploads/chat-img'
+    const tempFolder = 'uploads/chat-img/video-temp'
+    const files = await fs.promises.readdir(folder)
+    const tempVideo = await fs.promises.readdir(tempFolder)
+    for(const file of files)
+    {
+        try
+        {
+            await fs.promises.unlink(path.join(folder,file))
+        }
+        catch(ex){}
+    }
+    for(const file of tempVideo)
+    {
+        try
+        {
+            await fs.promises.unlink(path.join(tempFolder,file))
+        }
+        catch(ex){}
+    }
+
+}
 
 const videoCompression =(inputPath,outputPath) =>
 {
@@ -46,6 +75,19 @@ const makeScreenshot = (videoPath,outputPath) =>{
     })
 }
 
+const uploadToAWS = async(file,name,mimetype) =>
+{
+    const buffer = fs.readFileSync(file)
+    const command = new PutObjectCommand({
+        Bucket:process.env.AWS_BUCKET_NAME,
+        Key:name,
+        Body:buffer,
+        ContentType:mimetype
+    })
+
+    await s3.send(command)
+}
+
 async function uploadChatImgs(req,res)
 {
     try
@@ -64,30 +106,32 @@ async function uploadChatImgs(req,res)
             {
                 if(files[i].filename.split('.')[1] === "webp")
                 {
-                    filenames.push(files[i].filename)
+                    await uploadToAWS(`uploads/chat-img/${files[i].filename}`,`chat-img/${files[i].filename}`,'image/webp')
+                    filenames.push(`https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/chat-img/${files[i].filename.split('.')[0]}.webp`)
                 }
                 else
                 {
                     await sharp(files[i].path).resize({width:1920}).webp({quality:50}).toFile(`uploads/chat-img/${files[i].filename.split('.')[0]}.webp`)
-                    filenames.push(`${files[i].filename.split('.')[0]}.webp`)
-                    fs.unlinkSync(`uploads/chat-img/${files[i].filename}`)
+                    await uploadToAWS(`uploads/chat-img/${files[i].filename}`,`chat-img/${files[i].filename.split('.')[0]}.webp`,'image/webp')
+                    filenames.push(`https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/chat-img/${files[i].filename.split('.')[0]}.webp`)
                 }
-                
             }
             else
             {
                 const filename = files[i].filename.split('.')[0]
                 await makeScreenshot(files[i].path,`uploads/chat-img/${filename}.jpg`)
-                filenames.push(`${filename}.jpg`)
+                await sharp(`uploads/chat-img/${filename}.jpg`).resize({width:1920}).webp({quality:50}).toFile(`uploads/chat-img/${files[i].filename.split('.')[0]}.webp`)
+                await uploadToAWS(`uploads/chat-img/${files[i].filename.split('.')[0]}.webp`,`chat-img/${files[i].filename.split('.')[0]}.webp`,"image/webp")
                 await videoCompression(files[i].path,`uploads/chat-img/${files[i].filename}`)
-                fs.unlinkSync(`uploads/chat-img/video-temp/${files[i].filename}`)
+                await uploadToAWS(`uploads/chat-img/${files[i].filename}`,`chat-img/${files[i].filename}`,files[i].mimetype)
+                filenames.push(`https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/chat-img/${files[i].filename}`)
             }
         }
         chatContent.push({time:Date.now(),message:filenames.sort(),status:'sent',sender:me._id.toString(),type:files.at(-1).mimetype.includes('video')?"video":"photos"})
         await Chat.findByIdAndUpdate(chat._id.toString(),{$set:{content:chatContent}},{new:true})
         io.to(sockets[me.email]).emit('chatUpdate',{chat:req.body.chatId})
         io.to(sockets[secondUser.email]).emit('chatUpdate',{type:"new",chat:req.body.chatId})
-        
+        clearTemp()
 
         res.sendStatus(200)
 
