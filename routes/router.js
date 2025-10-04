@@ -37,6 +37,7 @@ import PostResetPassword from '../controller/postResetPassword.js'
 import deleteAccount from '../controller/deleteAccount.js'
 import getChatImgInfo from '../controller/getChatImgInfo.js'
 import passwordForgotten from '../controller/passwordForgotten.js'
+import serverStart from '../controller/serverStart.js'
 
 dotenv.config()
 
@@ -106,5 +107,6 @@ Router.put('/delete-account',userAuthorizationMiddleware,deleteAccount)
 
 Router.post('/password-forgotten',passwordForgotten)
 
+Router.get('/server-start',serverStart)
 
 export default Router
