@@ -14,6 +14,8 @@ const transporter = nodeMailer.createTransport({
         rejectUnauthorized: false,
     },
     connectionTimeout: 10000,
+    debug:true,
+    logger:true,
 })
 
 export default transporter
