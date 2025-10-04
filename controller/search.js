@@ -1,5 +1,4 @@
 import { User } from "../db/dbConfig.js"
-import { Chat } from "../db/dbConfig.js"
 import { gettingMyChats } from "./getMyChats.js"
 
 async function search(req,res)
