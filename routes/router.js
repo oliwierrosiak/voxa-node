@@ -9,7 +9,6 @@ import userPhoto from '../controller/userPhoto.js'
 import getUserData from '../controller/getUserData.js'
 import logoutUser from '../controller/logoutUser.js'
 import getSuggestedUsers from '../controller/getSuggestedUsers.js'
-import getUserImg from '../controller/getUserImg.js'
 import invitation from '../controller/invitation.js'
 import getMyInvitations from '../controller/getMyInvitations.js'
 import userInvitationModify from '../controller/userInvitationModify.js'
@@ -21,14 +20,11 @@ import updateChat from '../controller/updateChat.js'
 import messageSeen from '../controller/messageSeen.js'
 import upload from '../middleware/uploadVoiceMessage.js'
 import uploadVoiceMessage from '../controller/uploadVoiceMessage.js'
-import getVoiceMessage from '../controller/getVoiceMessage.js'
 import uploadChatImgs from '../controller/uploadChatImgs.js'
 import uploadChatImg from '../middleware/uploadChatsImgs.js'
-import getChatImg from '../controller/getChatImg.js'
 import getChatImgsData from '../controller/getChatImgsData.js'
 import fileUpload from '../middleware/uploadFile.js'
 import uploadFile from '../controller/uploadFile.js'
-import downloadFile from '../controller/downloadFile.js'
 import search from '../controller/search.js'
 import googleLogin from '../controller/googleLogin.js'
 import getProfile from '../controller/getProfile.js'
@@ -62,8 +58,6 @@ Router.post('/logout',logoutUser)
 
 Router.get('/get-suggested-users',userAuthorizationMiddleware,getSuggestedUsers)
 
-Router.get('/get-user-img/:img',userAuthorizationMiddleware,getUserImg)
-
 Router.post('/invitation',userAuthorizationMiddleware,invitation)
 
 Router.get('/get-my-invitations',userAuthorizationMiddleware,getMyInvitations)  
@@ -84,19 +78,13 @@ Router.patch('/message-seen',userAuthorizationMiddleware,messageSeen)
 
 Router.post('/send-voice-message',userAuthorizationMiddleware,upload.single('audio'),uploadVoiceMessage)
 
-Router.get('/get-voice-message/:file',userAuthorizationMiddleware,getVoiceMessage)
-
 Router.post('/upload-chat-images',userAuthorizationMiddleware,uploadChatImg.array('images',10),uploadChatImgs)
-
-Router.get('/get-chat-img/:img',userAuthorizationMiddleware,getChatImg)
 
 Router.get('/get-chat-img-info/:img',userAuthorizationMiddleware,getChatImgInfo)
 
 Router.get('/get-chat-imgs-data/:chatId',userAuthorizationMiddleware,getChatImgsData)
 
 Router.post('/upload-file',userAuthorizationMiddleware,fileUpload.single('file'),uploadFile)
-
-Router.get('/download-file/:filename',userAuthorizationMiddleware,downloadFile)
 
 Router.get('/search/:searchValue',userAuthorizationMiddleware,search)
 
