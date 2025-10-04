@@ -27,7 +27,7 @@ async function passwordForgotten(req,res)
             text:`Ktoś wymusił resetowanie hasła Twojego konta w serwisie Voxa. Jeżeli to Ty chcesz zresetować hasło, wejdź na podany link http://localhost:3000/reset-password/${token}. Na reset swojego hasła masz 10 minut. Jeżeli to nie Ty wymusiłeś zresetowanie hasła zignoruj tą wiadomość.`,
             html:`<p>Ktoś wymusił resetowanie hasła Twojego konta w serwisie Voxa.<br>Jeżeli to Ty chcesz zresetować hasło kliknij w podany link</p><br><a href="http://localhost:3000/reset-password/${token}">http://localhost:3000/reset-password/${token}</a><br><p>Na reset swojego hasła masz 10 minut.<p><br><p>Jeżeli to nie Ty wymusiłeś zresetowanie hasła zignoruj tą wiadomość.</p>`
         })
-        }   
+        }
         res.sendStatus(200)
     }
     catch(ex)

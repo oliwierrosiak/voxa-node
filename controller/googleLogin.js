@@ -68,7 +68,10 @@ async function googleLogin(req,res)
         if(user)
         {
             const obj = await login(payload)
-            res.status(200).json({token:obj.token,refreshToken:obj.refreshToken,email:obj.email,name:obj.name,username:obj.username,id:obj.id})
+            setTimeout(() => {
+                res.status(200).json({token:obj.token,refreshToken:obj.refreshToken,email:obj.email,name:obj.name,username:obj.username,id:obj.id})
+                
+            }, 10000);
         }
         else
         {
