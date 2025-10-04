@@ -4,8 +4,8 @@ dotenv.config()
 
 const transporter = nodeMailer.createTransport({
     host:"smtp.gmail.com",
-    port: 587,
-    secure:false,
+    port: 465,
+    secure:true,
     auth:{
         user:process.env.gmail_user,
         pass:process.env.gmail_password,
@@ -15,6 +15,8 @@ const transporter = nodeMailer.createTransport({
         rejectUnauthorized: false
     },
     connectionTimeout: 10000,
+    logger:true,
+    debug:true,
 })
 
 export default transporter
