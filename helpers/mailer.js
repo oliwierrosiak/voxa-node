@@ -3,20 +3,17 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const transporter = nodeMailer.createTransport({
-    host:"smtp.gmail.com",
-    port: 465,
-    secure:true,
+    host:process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT),
+    secure:false,
     auth:{
-        user:process.env.gmail_user,
-        pass:process.env.gmail_password,
+        user:process.env.SMTP_USER,
+        pass:process.env.SMTP_PASS,
     },
-    tls:
-    {
-        rejectUnauthorized: false
+    tls: {
+        rejectUnauthorized: false,
     },
     connectionTimeout: 10000,
-    logger:true,
-    debug:true,
 })
 
 export default transporter
