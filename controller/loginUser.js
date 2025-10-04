@@ -17,10 +17,7 @@ async function loginUser(req,res)
             const date = new Date()
             const refresh = new JwtRefreshToken({refreshToken,expireTime:date.getTime() + 3600000})
             await refresh.save()
-            setTimeout(() => {
-                res.status(200).json({token:token,refreshToken:refreshToken,email:user.email,name:user.name,username:user.username,id:user._id.toString()})
-                
-            }, 10000);
+            res.status(200).json({token:token,refreshToken:refreshToken,email:user.email,name:user.name,username:user.username,id:user._id.toString()})
         }
         else
         {

@@ -1,8 +1,5 @@
-import { OAuth2Client } from "google-auth-library"
 import { User } from "../db/dbConfig.js"
 import axios from "axios"
-import fs from 'fs'
-import { projectRoot } from "../app.js"
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import { JwtRefreshToken } from "../db/dbConfig.js"
@@ -14,34 +11,19 @@ async function registerUser(payload,usernameExist,userPhoto)
         name:payload.name,
         email:payload.email,
         password:`ZAQ!2wsx`,
-        username:usernameExist?`user-${Math.floor(Math.random()*100)}`:payload.given_name,
+        username:usernameExist?`user-${Math.floor(Math.random()*10000)}`:payload.given_name,
         img:userPhoto?userPhoto:'default.jpg'
     })
-    await user.save()
-
-}
-
-async function getUserPhoto(link)
-{
     try
     {
-        const userPhoto = await axios.get(link,{responseType:'stream'})
-        const fileName = `${Date.now()}.jpg`
-        const writer = fs.createWriteStream(`${projectRoot}/uploads/userImg/${fileName}`)
-        userPhoto.data.pipe(writer)
-        return new Promise((resolve,reject)=>{
-            writer.on("finish",()=>{
-                resolve(fileName)
-            })
-            writer.on('error',()=>{
-                reject(null)
-            })
-        })
+        await user.save()
+
     }
     catch(ex)
     {
 
-    }   
+    }
+
 }
 
 async function login(payload) {
@@ -68,21 +50,18 @@ async function googleLogin(req,res)
         if(user)
         {
             const obj = await login(payload)
-            setTimeout(() => {
-                res.status(200).json({token:obj.token,refreshToken:obj.refreshToken,email:obj.email,name:obj.name,username:obj.username,id:obj.id})
-                
-            }, 10000);
+            res.status(200).json({token:obj.token,refreshToken:obj.refreshToken,email:obj.email,name:obj.name,username:obj.username,id:obj.id})
         }
         else
         {
             const username = await User.findOne({username:payload.given_name})
-            const userPhoto = await getUserPhoto(payload.picture)
+            const userPhoto = payload.picture
 
             if(username)
             {
                 await registerUser(payload,true,userPhoto)
                 const obj = await login(payload)
-                 res.status(200).json({token:obj.token,refreshToken:obj.refreshToken,email:obj.email,name:obj.name,username:obj.username,id:obj.id})
+                res.status(200).json({token:obj.token,refreshToken:obj.refreshToken,email:obj.email,name:obj.name,username:obj.username,id:obj.id})
                 
             }
             else
