@@ -1,8 +1,8 @@
 import { User } from "../db/dbConfig.js"
 import { clearExpiredTokens } from "./resetPassword.js"
 import { ResetPassword } from "../db/dbConfig.js"
-import transporter from "../helpers/mailer.js"
 import { randomBytes } from "crypto"
+import brevo from '@getbrevo/brevo'
 
 async function passwordForgotten(req,res)
 {
@@ -20,13 +20,17 @@ async function passwordForgotten(req,res)
                 email:user.email,
             })
         await obj.save()
-        await transporter.sendMail({
-            from:'voxa.message@gmail.com',
-            to:user.email,
-            subject:'Resetowanie hasła aplikacji Voxa',
-            text:`Ktoś wymusił resetowanie hasła Twojego konta w serwisie Voxa. Jeżeli to Ty chcesz zresetować hasło, wejdź na podany link http://localhost:3000/reset-password/${token}. Na reset swojego hasła masz 10 minut. Jeżeli to nie Ty wymusiłeś zresetowanie hasła zignoruj tą wiadomość.`,
-            html:`<p>Ktoś wymusił resetowanie hasła Twojego konta w serwisie Voxa.<br>Jeżeli to Ty chcesz zresetować hasło kliknij w podany link</p><br><a href="http://localhost:3000/reset-password/${token}">http://localhost:3000/reset-password/${token}</a><br><p>Na reset swojego hasła masz 10 minut.<p><br><p>Jeżeli to nie Ty wymusiłeś zresetowanie hasła zignoruj tą wiadomość.</p>`
-        })
+        const client = new brevo.TransactionalEmailsApi();
+        client.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+        const email = {
+            sender:{email:'voxa.message@gmail.com',name:"Voxa-Chats"},
+            to: [{ email: user.email }],
+            subject: 'Resetowanie hasła aplikacji Voxa',
+            htmlContent: `<p>Ktoś wymusił resetowanie hasła Twojego konta w Voxa.</p>
+            <a href="http://voxa-chats.web.app/reset-password/${token}">http://voxa-chats.web.app/reset-password/${token}</a>
+            <p>Masz 10 minut na reset. Jeśli to nie Ty, zignoruj wiadomość.</p>
+        `}
+        await client.sendTransacEmail(email);
         }
         res.sendStatus(200)
     }

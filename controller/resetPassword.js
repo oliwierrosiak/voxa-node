@@ -1,6 +1,8 @@
 import { ResetPassword } from "../db/dbConfig.js"
 import { randomBytes} from 'crypto'
-import transporter from "../helpers/mailer.js"
+import brevo from '@getbrevo/brevo'
+import dotenv from 'dotenv'
+dotenv.config()
 
 export async function clearExpiredTokens()
 {
@@ -34,14 +36,21 @@ async function resetPassword(req,res)
             email:req.user.email,
         })
         await obj.save()
-        await transporter.sendMail({
-            from:'voxa.message@gmail.com',
-            to:req.user.email,
-            subject:'Resetowanie hasła aplikacji Voxa',
-            text:`Ktoś wymusił resetowanie hasła Twojego konta w serwisie Voxa. Jeżeli to Ty chcesz zresetować hasło, wejdź na podany link http://localhost:3000/reset-password/${token}. Na reset swojego hasła masz 10 minut. Jeżeli to nie Ty wymusiłeś zresetowanie hasła zignoruj tą wiadomość.`,
-            html:`<p>Ktoś wymusił resetowanie hasła Twojego konta w serwisie Voxa.<br>Jeżeli to Ty chcesz zresetować hasło kliknij w podany link</p><br><a href="http://localhost:3000/reset-password/${token}">http://localhost:3000/reset-password/${token}</a><br><p>Na reset swojego hasła masz 10 minut.<p><br><p>Jeżeli to nie Ty wymusiłeś zresetowanie hasła zignoruj tą wiadomość.</p>`
-        })
-        res.sendStatus(200)
+        const client = new brevo.TransactionalEmailsApi();
+        client.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+
+        
+  const email = {
+    sender:{email:'voxa.message@gmail.com',name:"Voxa-Chats"},
+    to: [{ email: req.user.email }],
+    subject: 'Resetowanie hasła aplikacji Voxa',
+    htmlContent: `
+      <p>Ktoś wymusił resetowanie hasła Twojego konta w Voxa.</p>
+      <a href="http://voxa-chats.web.app/reset-password/${token}">http://voxa-chats.web.app/reset-password/${token}</a>
+      <p>Masz 10 minut na reset. Jeśli to nie Ty, zignoruj wiadomość.</p>
+    `}
+    await client.sendTransacEmail(email);
+    res.sendStatus(200)
     }
     catch(ex)
     {
